@@ -1,0 +1,40 @@
+diff --git a/dist/nitro.mjs b/dist/nitro.mjs
+index 1d07b0e073af941065e3677ad46118b7009a38e6..a862d26d83969d900dfb16a9512b32d172559622 100644
+--- a/dist/nitro.mjs
++++ b/dist/nitro.mjs
+@@ -4037,7 +4037,7 @@ const vercel = defineNitroPreset({
+   output: {
+     dir: "{{ rootDir }}/.vercel/output",
+     serverDir: "{{ output.dir }}/functions/__nitro.func",
+-    publicDir: "{{ output.dir }}/static"
++    publicDir: "{{ output.dir }}/static/{{ baseURL }}"
+   },
+   commands: {
+     deploy: "",
+@@ -4102,7 +4102,7 @@ const vercelEdge = defineNitroPreset({
+   output: {
+     dir: "{{ rootDir }}/.vercel/output",
+     serverDir: "{{ output.dir }}/functions/__nitro.func",
+-    publicDir: "{{ output.dir }}/static"
++    publicDir: "{{ output.dir }}/static/{{ baseURL }}"
+   },
+   commands: {
+     deploy: "",
+@@ -4150,7 +4150,7 @@ const vercelStatic = defineNitroPreset({
+   extends: "static",
+   output: {
+     dir: "{{ rootDir }}/.vercel/output",
+-    publicDir: "{{ output.dir }}/static"
++    publicDir: "{{ output.dir }}/static/{{ baseURL }}"
+   },
+   commands: {
+     preview: "npx serve ./static"
+@@ -4202,7 +4202,7 @@ function generateBuildConfig(nitro) {
+       }),
+       // Public asset rules
+       ...nitro.options.publicAssets.filter((asset) => !asset.fallthrough).map((asset) => asset.baseURL).map((baseURL) => ({
+-        src: baseURL + "(.*)",
++        src: joinURL(nitro.options.baseURL, baseURL) + "(.*)",
+         headers: {
+           "cache-control": "public,max-age=31536000,immutable"
+         },
